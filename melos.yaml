@@ -1,0 +1,27 @@
+name: shelf_packages-rack
+
+repository:
+  type: "github"
+  origin: "https://github.com/coolosos/shelf_packages"
+  owner: "coolosos"
+  name: "shelf_packages"
+
+packages:
+  - example/*
+  - packages/*
+
+command:
+  version:
+    # Only allow versioning to happen on main branch.
+    branch: main
+    # Generate commit links in package changelogs.
+    linkToCommits: true
+    updateGitTagRefs: true
+    # Additionally build a changelog at the root of the workspace.
+    workspaceChangelog: true
+  bootstrap:
+    runPubGetInParallel: false
+
+scripts:
+  pub_upgrade:
+    run: melos exec -c 1 -- "flutter pub upgrade"
