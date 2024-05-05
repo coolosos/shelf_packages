@@ -1,6 +1,14 @@
 name: shelf_flutter_app
 description: A flutter web integrator for shelf
-version: 1.0.0+1
+version: 1.0.0
+
+repository: "https://github.com/coolosos/shelf_packages/tree/main/packages/shelf_flutter_app"
+
+topics:
+  - server
+  - shelf
+  - backend
+  - dartfrog
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -9,6 +17,7 @@ dependencies:
   shelf: ^1.0.0
   shelf_static: ^1.1.2
   shelf_gzip: ^4.1.0
+  path: ^1.9.0
 
 dev_dependencies:
   mocktail: ^1.0.0

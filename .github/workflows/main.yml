@@ -29,6 +29,6 @@ jobs:
           melos-version: ${{ env.MELOS_VERSION }}
           run-bootstrap: true
 
-      - run: melos publish --dry-run
+      - run: melos publish --no-dry-run
 
  

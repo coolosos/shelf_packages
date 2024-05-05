@@ -1,2 +1,11 @@
-# shelf_flutter_app
-serve a flutter web app with shelf or dart_frog
+# coolosos shelf packages
+
+
+
+
+## Packages 📦
+
+| Package  | Pub  |
+| ----------- | ------------------  |
+| [shelf_flutter_app](https://github.com/coolosos/shelf_packages/tree/main/packages/shelf_flutter_app) | [![pub package](https://img.shields.io/pub/v/shelf_packages.svg)](https://pub.dev/packages/shelf_packages) |
+ 

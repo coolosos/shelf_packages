@@ -7,8 +7,8 @@ import 'properties/run_app_properties.dart';
 
 class RunApp {
   RunApp({
-    required RunAppProperties runAppProperties,
-  }) : _runAppProperties = runAppProperties;
+    RunAppProperties? runAppProperties,
+  }) : _runAppProperties = runAppProperties ?? const RunAppProperties();
 
   String? _indexHtmlApp;
 
