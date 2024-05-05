@@ -11,8 +11,8 @@ env:
   MELOS_VERSION: 6.0.0
 
 jobs:
-  docker-deploy:
-    name: Docker
+  deploy:
+    name: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
