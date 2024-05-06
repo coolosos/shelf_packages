@@ -1,6 +1,6 @@
 final class LoggerConf {
   const LoggerConf({
-    required this.logRequest,
+    this.logRequest = true,
     this.customLogger,
   });
 
