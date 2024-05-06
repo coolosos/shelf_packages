@@ -1,6 +1,9 @@
 import 'logger_conf.dart';
 import 'static_conf.dart';
 
+export 'logger_conf.dart';
+export 'static_conf.dart';
+
 final class RunAppProperties {
   const RunAppProperties({
     this.loggerConf = const LoggerConf(logRequest: false),
