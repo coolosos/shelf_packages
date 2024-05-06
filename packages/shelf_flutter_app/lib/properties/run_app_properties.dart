@@ -6,7 +6,7 @@ export 'static_conf.dart';
 
 final class RunAppProperties {
   const RunAppProperties({
-    this.loggerConf = const LoggerConf(logRequest: false),
+    this.loggerConf = const LoggerConf(),
     this.staticConf = const StaticConf(),
   });
 
