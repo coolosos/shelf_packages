@@ -6,4 +6,4 @@ environment:
 
 dev_dependencies:
   melos: ^6.0.0
-  coolint: 1.0.3
+  coolint: 2.0.0
