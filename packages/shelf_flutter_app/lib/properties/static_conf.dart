@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'package:path/path.dart' as path;
-
 final class StaticConf {
   const StaticConf({
     this.fileSystemPath = 'app',
@@ -14,12 +11,4 @@ final class StaticConf {
 
   final bool onNotFoundPathUseDefaultDocument;
   final bool compress;
-
-  File get file => File(
-        path.join(
-          Directory.current.path,
-          fileSystemPath,
-          defaultDocument,
-        ),
-      );
 }
