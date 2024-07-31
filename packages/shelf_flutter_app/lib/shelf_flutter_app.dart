@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_gzip/shelf_gzip.dart';
-
+import 'package:shelf_static/shelf_static.dart';
 import 'properties/run_app_properties.dart';
 
 class RunApp {
@@ -10,16 +10,26 @@ class RunApp {
     RunAppProperties? runAppProperties,
   }) : _runAppProperties = runAppProperties ?? const RunAppProperties();
 
-  String? _indexHtmlApp;
+  static String? _indexHtmlApp;
 
   final RunAppProperties _runAppProperties;
 
   Handler get handler {
-    Pipeline pipeline = const Pipeline().addMiddleware(createGzipMiddleware());
+    Pipeline pipeline = const Pipeline();
 
-    if (_runAppProperties.staticConf.onNotFoundUseDefaultDocumentMiddleware) {
+    if (_runAppProperties.staticConf.compress) {
+      pipeline = pipeline.addMiddleware(createGzipMiddleware());
+    }
+
+    if (_runAppProperties.staticConf.onNotFoundUseDefaultDocument) {
       pipeline = pipeline.addMiddleware(
-        flutterAppOnNotFoundResponseMiddleware(),
+        onNotFoundUseDefaultDocumentMiddleware(),
+      );
+    }
+
+    if (_runAppProperties.staticConf.rootUseDefaultDocument) {
+      pipeline = pipeline.addMiddleware(
+        rootUseDefaultDocumentMiddleware(),
       );
     }
 
@@ -31,17 +41,27 @@ class RunApp {
       );
     }
 
-    return pipeline.addHandler(_runAppProperties.staticConf.staticHandler);
+    return pipeline.addHandler(
+      createStaticHandler(
+        _runAppProperties.staticConf.fileSystemPath,
+        defaultDocument: _runAppProperties.staticConf.defaultDocument,
+      ),
+    );
   }
 
-  Middleware flutterAppOnNotFoundResponseMiddleware() {
-    return (Handler innerHandler) => (Request request) async {
+  Middleware rootUseDefaultDocumentMiddleware() {
+    return (Handler innerHandler) => (Request request) {
           if (request.url.path.isEmpty ||
               request.url.path ==
                   _runAppProperties.staticConf.defaultDocument) {
             return _index();
           }
+          return innerHandler(request);
+        };
+  }
 
+  Middleware onNotFoundUseDefaultDocumentMiddleware() {
+    return (Handler innerHandler) => (Request request) {
           return Future.sync(() => innerHandler(request)).then((response) {
             if (response.statusCode == HttpStatus.notFound) {
               return _index();
@@ -52,14 +72,14 @@ class RunApp {
         };
   }
 
-  Response _index() {
-    final body = _indexHtmlApp ??= _runAppProperties.staticConf.indexApp;
-    if (body.isEmpty) {
+  Future<Response> _index() async {
+    _indexHtmlApp ??= await _runAppProperties.staticConf.file.readAsString();
+    if (_indexHtmlApp?.isEmpty ?? true) {
       return Response.notFound('');
     }
     return Response(
       HttpStatus.ok,
-      body: body,
+      body: _indexHtmlApp,
       headers: {
         HttpHeaders.contentTypeHeader: ContentType.html.toString(),
       },

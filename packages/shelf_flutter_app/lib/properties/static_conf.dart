@@ -1,29 +1,27 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
-import 'package:shelf/shelf.dart';
-import 'package:shelf_static/shelf_static.dart';
 
 final class StaticConf {
   const StaticConf({
     this.fileSystemPath = 'app',
     this.defaultDocument = 'index.html',
-    this.onNotFoundUseDefaultDocumentMiddleware = true,
+    this.rootUseDefaultDocument = true,
+    this.onNotFoundUseDefaultDocument = false,
+    this.compress = true,
   });
 
   final String fileSystemPath;
   final String defaultDocument;
-  final bool onNotFoundUseDefaultDocumentMiddleware;
 
-  String get indexApp => File(
+  final bool rootUseDefaultDocument;
+  final bool onNotFoundUseDefaultDocument;
+  final bool compress;
+
+  File get file => File(
         path.join(
           Directory.current.path,
           fileSystemPath,
           defaultDocument,
         ),
-      ).readAsStringSync();
-
-  Handler get staticHandler => createStaticHandler(
-        fileSystemPath,
-        defaultDocument: defaultDocument,
       );
 }
