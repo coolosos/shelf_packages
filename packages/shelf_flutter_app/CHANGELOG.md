@@ -1,7 +1,7 @@
 ## 1.0.1
 
-* rootUseDefaultDocument
-* onNotFoundUseDefaultDocument
+* onNotFoundPathUseDefaultDocument
+* remove index cached
 
 ## 1.0.0
 
