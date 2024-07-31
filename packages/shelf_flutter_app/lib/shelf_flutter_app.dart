@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:shelf/shelf.dart';
 import 'package:shelf_gzip/shelf_gzip.dart';
-
+import 'package:shelf_static/shelf_static.dart';
+import 'properties/middleware/no_found_middleware.dart';
 import 'properties/run_app_properties.dart';
 
 class RunApp {
@@ -10,17 +9,13 @@ class RunApp {
     RunAppProperties? runAppProperties,
   }) : _runAppProperties = runAppProperties ?? const RunAppProperties();
 
-  String? _indexHtmlApp;
-
   final RunAppProperties _runAppProperties;
 
   Handler get handler {
-    Pipeline pipeline = const Pipeline().addMiddleware(createGzipMiddleware());
+    Pipeline pipeline = const Pipeline();
 
-    if (_runAppProperties.staticConf.onNotFoundUseDefaultDocumentMiddleware) {
-      pipeline = pipeline.addMiddleware(
-        flutterAppOnNotFoundResponseMiddleware(),
-      );
+    if (_runAppProperties.staticConf.compress) {
+      pipeline = pipeline.addMiddleware(createGzipMiddleware());
     }
 
     if (_runAppProperties.loggerConf.logRequest) {
@@ -31,38 +26,18 @@ class RunApp {
       );
     }
 
-    return pipeline.addHandler(_runAppProperties.staticConf.staticHandler);
-  }
-
-  Middleware flutterAppOnNotFoundResponseMiddleware() {
-    return (Handler innerHandler) => (Request request) async {
-          if (request.url.path.isEmpty ||
-              request.url.path ==
-                  _runAppProperties.staticConf.defaultDocument) {
-            return _index();
-          }
-
-          return Future.sync(() => innerHandler(request)).then((response) {
-            if (response.statusCode == HttpStatus.notFound) {
-              return _index();
-            }
-
-            return response;
-          });
-        };
-  }
-
-  Response _index() {
-    final body = _indexHtmlApp ??= _runAppProperties.staticConf.indexApp;
-    if (body.isEmpty) {
-      return Response.notFound('');
+    if (_runAppProperties.staticConf.onNotFoundPathUseDefaultDocument) {
+      pipeline = pipeline.addMiddleware(
+        onNotFoundUseDefaultDocumentMiddleware(
+          _runAppProperties.staticConf.defaultDocument,
+        ),
+      );
     }
-    return Response(
-      HttpStatus.ok,
-      body: body,
-      headers: {
-        HttpHeaders.contentTypeHeader: ContentType.html.toString(),
-      },
+    return pipeline.addHandler(
+      createStaticHandler(
+        _runAppProperties.staticConf.fileSystemPath,
+        defaultDocument: _runAppProperties.staticConf.defaultDocument,
+      ),
     );
   }
 }
