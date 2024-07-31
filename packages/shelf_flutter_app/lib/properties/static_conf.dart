@@ -5,16 +5,14 @@ final class StaticConf {
   const StaticConf({
     this.fileSystemPath = 'app',
     this.defaultDocument = 'index.html',
-    this.rootUseDefaultDocument = true,
-    this.onNotFoundUseDefaultDocument = false,
+    this.onNotFoundPathUseDefaultDocument = true,
     this.compress = true,
   });
 
   final String fileSystemPath;
   final String defaultDocument;
 
-  final bool rootUseDefaultDocument;
-  final bool onNotFoundUseDefaultDocument;
+  final bool onNotFoundPathUseDefaultDocument;
   final bool compress;
 
   File get file => File(
